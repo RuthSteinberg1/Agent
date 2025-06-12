@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Security Agent | Microsoft Fabric</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge;" />
+    <meta charset="utf-8">
+    <meta name="description" content="Security Agent Demo in Microsoft Fabric style." />
+    <meta name="format-detection" content="telephone=no" />
+    <link rel="stylesheet" href="https://content.powerapps.com/resource/powerbiwfe/styles/powerbiportal.bundle.min.e1c0e830e2f04167acb6.css" />
+    <link rel="shortcut icon" href="https://content.powerapps.com/resource/powerbiwfe/images/spinner-Fabric-logo.2ba5652d7f4e89b3ae6d.svg"/>
+    <style>
+        body {
+            margin: 0;
+            background: #f6f7fb;
+            font-family: "Segoe UI", Arial, sans-serif;
+        }
+        .fabric-shell {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            min-height: 0;
+        }
+        .fabric-topbar {
+            background: #191919;
+            color: #fff;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            padding: 0 18px 0 10px;
+            font-size: 1.1em;
+        }
+        .fabric-topbar .workspace-title {
+            font-weight: 600;
+            margin-left: 4px;
+            margin-right: 24px;
+            font-size: 1.1em;
+            letter-spacing: 0.5px;
+        }
+        .fabric-topbar .confidential {
+            background: #2b222b;
+            color: #f25022;
+            border-radius: 8px;
+            font-size: 0.98em;
+            font-weight: 500;
+            padding: 4px 13px;
+            margin-right: 18px;
+            margin-left: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .fabric-topbar input[type="text"] {
+            margin-left: 40px;
+            border: none;
+            border-radius: 4px;
+            padding: 6px 14px;
+            font-size: 1em;
+            background: #333;
+            color: #fff;
+            width: 350px;
+            outline: none;
+        }
+        .fabric-topbar .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            margin-left: auto;
+            background: #444;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .fabric-content-centered {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #f6f7fb;
+            min-width: 0;
+        }
+        .agent-title-large {
+            font-size: 2.1em;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 24px;
+            margin-top: 8px;
+            letter-spacing: -1px;
+            text-align: center;
+        }
+        .suggested-questions-row {
+            display: flex;
+            gap: 18px;
+            margin-bottom: 28px;
+            justify-content: center;
+        }
+        .suggested-question {
+            background: #fff;
+            border: 1.3px solid #e3e6ea;
+            border-radius: 10px;
+            padding: 16px 26px;
+            min-width: 220px;
+            font-size: 1.07em;
+            color: #222;
+            cursor: pointer;
+            transition: background 0.15s, border 0.15s;
+            display: flex;
+            align-items: center;
+        }
+        .suggested-question:hover {
+            background: #e3f2fd;
+            border-color: #0078d4;
+        }
+        .chat-area {
+            width: 85%;
+            min-width: 320px;
+            max-width: 760px;
+            min-height: 170px;
+            background: #f8fafc;
+            border-radius: 10px;
+            border: 1px solid #e3e6ea;
+            padding: 25px 22px 12px 22px;
+            margin-bottom: 32px;
+            font-size: 1.04em;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .chat-message {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 0;
+        }
+        .chat-user {
+            color: #0078d4;
+            font-weight: 600;
+        }
+        .chat-agent {
+            color: #555;
+            font-weight: 500;
+        }
+        .chat-bubble {
+            background: #fff;
+            border-radius: 7px;
+            padding: 9px 16px;
+            box-shadow: 0 0 5px #e3e6ea;
+            max-width: 76%;
+        }
+        .input-row {
+            width: 85%;
+            min-width: 320px;
+            max-width: 760px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 18px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .question-input {
+            flex: 1;
+            border-radius: 8px;
+            border: 1px solid #e3e6ea;
+            padding: 16px 14px;
+            font-size: 1.1em;
+            min-width: 0;
+        }
+        .send-btn {
+            background: #0078d4;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.07em;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background 0.16s;
+        }
+        .send-btn:hover {
+            background: #005fa3;
+        }
+        .footer-note {
+            color: #888;
+            font-size: 0.97em;
+            margin-top: 0;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        /* Explorer Modal */
+        .explorer-modal-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0,0,0,0.18);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .explorer-modal-bg.active {
+            display: flex;
+        }
+        .explorer-modal {
+            background: #fff;
+            border-radius: 17px;
+            box-shadow: 0 8px 40px 0 rgba(0,0,0,0.13);
+            padding: 32px 30px 20px 30px;
+            min-width: 320px;
+            min-height: 210px;
+            max-width: 380px;
+            width: 98vw;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .explorer-title {
+            font-size: 1.14em;
+            font-weight: 600;
+            color: #222;
+            margin-bottom: 16px;
+        }
+        .explorer-close {
+            position: absolute;
+            top: 15px;
+            right: 25px;
+            font-size: 1.6em;
+            color: #888;
+            background: none;
+            border: none;
+            cursor: pointer;
+            z-index: 10;
+        }
+        .explorer-datasource-btn {
+            border: 1px solid #cdd7df;
+            background: #f7fafc;
+            border-radius: 7px;
+            color: #0078d4;
+            font-size: 1em;
+            padding: 8px 16px;
+            margin-bottom: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: background 0.14s, border 0.14s;
+        }
+        .explorer-datasource-btn:hover {
+            background: #e3f2fd;
+            border-color: #0078d4;
+        }
+        .explorer-tree {
+            flex: 1;
+            width: 100%;
+        }
+        .explorer-tree ul {
+            padding-left: 0;
+            margin: 0;
+        }
+        .explorer-tree li {
+            list-style: none;
+            margin-bottom: 13px;
+            font-size: 1.09em;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+        .explorer-tree .tree-icon {
+            width: 28px; height: 28px;
+        }
+        @media (max-width: 900px) {
+            .chat-area, .input-row {
+                width: 97%;
+                min-width: 0;
+                max-width: none;
+            }
+        }
+        @media (max-width: 700px) {
+            .agent-title-large {
+                font-size: 1.35em;
+            }
+            .suggested-questions-row {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .explorer-modal {
+                padding: 14px 7vw 10px 7vw;
+                min-width: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="fabric-shell">
+        <div class="fabric-topbar">
+            <img src="https://content.powerapps.com/resource/powerbiwfe/images/spinner-Fabric-logo.2ba5652d7f4e89b3ae6d.svg" alt="Microsoft Fabric Logo" width="36" height="47" style="margin-right:10px;vertical-align:middle;">
+            <span class="workspace-title">Security_Agent</span>
+            <span class="confidential">Highly Confidential | Any User (No Protection)</span>
+            <input type="text" placeholder="Search" style="margin-left:40px;">
+            <span class="avatar"> <svg width="19" height="19" fill="#bbb"><circle cx="9.5" cy="9.5" r="9.5"/></svg> </span>
+        </div>
+        <div class="fabric-content-centered">
+            <div class="agent-title-large">Security Agent</div>
+            <button class="explorer-datasource-btn" id="showExplorerBtn"><span style="font-size:1.35em;">＋</span> Data source</button>
+            <div class="suggested-questions-row">
+                <div class="suggested-question" data-question="Does the data connect to an external source?">
+                    <span>🔗&nbsp; Does the data connect to an external source?</span>
+                </div>
+                <div class="suggested-question" data-question="Does someone connect to my data?">
+                    <span>👤&nbsp; Does someone connect to my data?</span>
+                </div>
+                <div class="suggested-question" data-question="Which data has a sensitivity label (or any other label type)?">
+                    <span>🏷️&nbsp; Which data has a sensitivity label (or any other label type)?</span>
+                </div>
+            </div>
+            <div class="chat-area" id="chatArea">
+                <!-- Chat messages will appear here -->
+            </div>
+            <div class="input-row">
+                <input class="question-input" id="questionInput" type="text" placeholder="Ask a question to the Security Agent..." />
+                <button class="send-btn" id="sendBtn">&#9658;</button>
+            </div>
+            <div class="footer-note">
+                Created with AI. Mistakes are possible. <a href="#" style="color:#0078d4;">Review terms</a>
+            </div>
+        </div>
+        <!-- Explorer Modal -->
+        <div class="explorer-modal-bg" id="explorerModalBg">
+            <div class="explorer-modal">
+                <button class="explorer-close" id="closeExplorerBtn" title="Close">&times;</button>
+                <div class="explorer-title">Explorer</div>
+                <button class="explorer-datasource-btn" disabled>
+                    <span style="font-size:1.2em;">＋</span> Data source
+                </button>
+                <div class="explorer-tree">
+                    <ul>
+                        <li><img class="tree-icon" src="https://img.icons8.com/color/48/000000/database.png"/> Ruth_telemetry</li>
+                        <li><img class="tree-icon" src="https://img.icons8.com/color/48/000000/database.png"/> DLP_PP_dest</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+    <script>
+        // Show/hide explorer modal
+        document.getElementById('showExplorerBtn').onclick = function() {
+            document.getElementById('explorerModalBg').classList.add('active');
+        }
+        document.getElementById('closeExplorerBtn').onclick = function() {
+            document.getElementById('explorerModalBg').classList.remove('active');
+        }
+        // Also close explorer modal on background click
+        document.getElementById('explorerModalBg').onclick = function(e) {
+            if (e.target === this) {
+                this.classList.remove('active');
+            }
+        }
+    </script>
+</body>
+</html>

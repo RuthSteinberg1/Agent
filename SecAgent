@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Microsoft Fabric - Security Agent Demo</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge;" />
+    <meta charset="utf-8">
+    <meta name="description" content="Demo Security Agent for Microsoft Fabric, styled like the Data Agent." />
+    <meta name="format-detection" content="telephone=no" />
+
+    <!-- Use Fabric/Power BI styles for data agent look -->
+    <link rel="stylesheet" href="https://content.powerapps.com/resource/powerbiwfe/styles/powerbiportal.bundle.min.e1c0e830e2f04167acb6.css" />
+
+    <style>
+        body {
+            background: #f6f7fb;
+            margin: 0;
+        }
+        .security-agent-main {
+            max-width: 880px;
+            margin: 60px auto 0 auto;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 32px 0 rgba(0,0,0,0.09);
+            padding: 38px 38px 18px 38px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: "Segoe UI", Arial, sans-serif;
+        }
+        .agent-title {
+            font-size: 2.2em;
+            color: #0078d4;
+            font-weight: 600;
+            margin-bottom: 18px;
+            letter-spacing: -1px;
+        }
+        .suggested-questions-row {
+            display: flex;
+            gap: 18px;
+            margin-bottom: 28px;
+        }
+        .suggested-question {
+            background: #f6f8fa;
+            border: 1.3px solid #e3e6ea;
+            border-radius: 10px;
+            padding: 16px 26px;
+            min-width: 220px;
+            font-size: 1.07em;
+            color: #222;
+            cursor: pointer;
+            transition: background 0.15s, border 0.15s;
+            display: flex;
+            align-items: center;
+        }
+        .suggested-question:hover {
+            background: #e3f2fd;
+            border-color: #0078d4;
+        }
+        .chat-area {
+            width: 100%;
+            min-height: 200px;
+            background: #f8fafc;
+            border-radius: 10px;
+            border: 1px solid #e3e6ea;
+            padding: 25px 22px 12px 22px;
+            margin-bottom: 32px;
+            font-size: 1.04em;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        .chat-message {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 0;
+        }
+        .chat-user {
+            color: #0078d4;
+            font-weight: 600;
+        }
+        .chat-agent {
+            color: #555;
+            font-weight: 500;
+        }
+        .chat-bubble {
+            background: #fff;
+            border-radius: 7px;
+            padding: 9px 16px;
+            box-shadow: 0 0 5px #e3e6ea;
+            max-width: 76%;
+        }
+        .input-row {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 18px;
+        }
+        .question-input {
+            flex: 1;
+            border-radius: 8px;
+            border: 1px solid #e3e6ea;
+            padding: 16px 14px;
+            font-size: 1.1em;
+            min-width: 0;
+        }
+        .send-btn {
+            background: #0078d4;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.07em;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background 0.16s;
+        }
+        .send-btn:hover {
+            background: #005fa3;
+        }
+        .footer-note {
+            color: #888;
+            font-size: 0.97em;
+            margin-top: 0;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        @media (max-width: 700px) {
+            .security-agent-main {
+                padding: 14px 4vw;
+            }
+            .suggested-questions-row {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="security-agent-main">
+        <div class="agent-title">Security Agent</div>
+        <div class="suggested-questions-row">
+            <div class="suggested-question" data-question="Does the data connect to an external source?">
+                <span>🔗&nbsp; Does the data connect to an external source?</span>
+            </div>
+            <div class="suggested-question" data-question="Does someone connect to my data?">
+                <span>👤&nbsp; Does someone connect to my data?</span>
+            </div>
+            <div class="suggested-question" data-question="Which data has a sensitivity label (or any other label type)?">
+                <span>🏷️&nbsp; Which data has a sensitivity label (or any other label type)?</span>
+            </div>
+        </div>
+        <div class="chat-area" id="chatArea">
+            <!-- Chat messages will appear here -->
+        </div>
+        <div class="input-row">
+            <input class="question-input" id="questionInput" type="text" placeholder="Ask a question to the Security Agent..." />
+            <button class="send-btn" id="sendBtn">&#9658;</button>
+        </div>
+        <div class="footer-note">
+            Created with AI. Mistakes are possible. <a href="#" style="color:#0078d4;">Review terms</a>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
